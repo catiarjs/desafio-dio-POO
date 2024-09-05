@@ -1,8 +1,11 @@
 package br.com.dio.desafio.dominio;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Bootcamp {
@@ -16,36 +19,69 @@ public class Bootcamp {
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public String getDescricao() {
         return descricao;
     }
+
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
     public LocalDate getDataInicial() {
         return dataInicial;
     }
+
     public void setDataInicial(LocalDate dataInicial) {
         this.dataInicial = dataInicial;
     }
+
     public LocalDate getDataFinal() {
         return dataFinal;
     }
+
     public void setDataFinal(LocalDate dataFinal) {
         this.dataFinal = dataFinal;
     }
+
     public Set<Dev> getDevsInscritos() {
         return devsInscritos;
     }
+
+    public void imprimeDevsInscritos() {
+        System.out.println("Devs Inscritos no Bootcamp \"" + getNome() + "\":");
+        for(Dev dev : devsInscritos) {
+            System.out.println(dev.getNome());
+        }
+    }
+    
+    private List<Dev> ranqueiaDevs() {
+        List<Dev> devsPorXP = new ArrayList<>(devsInscritos);
+        Collections.sort(devsPorXP, new ComparatorPorXP().reversed());
+        return devsPorXP;
+    }
+
+    public void imprimeDevsRanqueados() {
+        List<Dev> devsRanqueados =  ranqueiaDevs();
+
+        System.out.println("Ranking de Devs no Bootcamp \"" + getNome() + "\":");
+        for(Dev dev : devsRanqueados) {
+            System.out.println(dev.getNome() + " ---> " + dev.getXp() + "XP");
+        }
+    }
+
     public void setDevsInscritos(Set<Dev> devsInscritos) {
         this.devsInscritos = devsInscritos;
     }
+
     public Set<Conteudo> getConteudos() {
         return conteudos;
     }
+
     public void setConteudos(Set<Conteudo> conteudos) {
         this.conteudos = conteudos;
     }
@@ -104,7 +140,4 @@ public class Bootcamp {
             return false;
         return true;
     }
-
-
-    
 }

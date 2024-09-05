@@ -1,5 +1,6 @@
 package br.com.dio.desafio.dominio;
 
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -8,6 +9,7 @@ public class Dev {
     private String nome;
     private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
+    private double xp;
 
     public void inscreverBootcamp(Bootcamp bootcamp){
         this.conteudosInscritos.addAll(bootcamp.getConteudos());
@@ -19,9 +21,14 @@ public class Dev {
         if(conteudo.isPresent()) {
             this.conteudosConcluidos.add(conteudo.get());
             this.conteudosInscritos.remove(conteudo.get());
+            this.atualizarXp();
         } else {
             System.err.println("Você não está matriculado em nenhum conteúdo!");
         }
+    }
+
+    public void atualizarXp() {
+        this.xp = calcularTotalXp();
     }
 
     public double calcularTotalXp() {
@@ -37,6 +44,10 @@ public class Dev {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public double getXp() {
+        return this.xp;
     }
 
     public Set<Conteudo> getConteudosInscritos() {
@@ -62,6 +73,9 @@ public class Dev {
         result = prime * result + ((nome == null) ? 0 : nome.hashCode());
         result = prime * result + ((conteudosInscritos == null) ? 0 : conteudosInscritos.hashCode());
         result = prime * result + ((conteudosConcluidos == null) ? 0 : conteudosConcluidos.hashCode());
+        long temp;
+        temp = Double.doubleToLongBits(xp);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -89,6 +103,14 @@ public class Dev {
                 return false;
         } else if (!conteudosConcluidos.equals(other.conteudosConcluidos))
             return false;
+        if (Double.doubleToLongBits(xp) != Double.doubleToLongBits(other.xp))
+            return false;
         return true;
+    }
+}
+
+class ComparatorPorXP implements Comparator<Dev> {
+    public int compare(Dev d1, Dev d2 ) {
+        return Double.compare(d1.getXp(), d2.getXp());
     }
 }
